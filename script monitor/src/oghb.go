@@ -19,20 +19,23 @@ var name *string
 var apiUrl *string
 var action *string
 var description *string
-var interval *int
+var interval int
 var intervalUnit *string
 var delete *bool
 
 func main() {
 	parseFlags()
-	if *action == "start" {
-		startHeartbeat()
-	} else if *action == "stop" {
-		stopHeartbeat()
-	} else if *action == "send" {
-		sendHeartbeat()
-	} else {
-		panic("Unknown action flag; use start or stop")
+	for {
+		if *action == "start" {
+			startHeartbeat()
+		} else if *action == "stop" {
+			stopHeartbeat()
+		} else if *action == "send" {
+			sendHeartbeat()
+		} else {
+			panic("Unknown action flag; use start or stop")
+		}
+		time.Sleep(time.Minute * time.Duration(interval))
 	}
 }
 
@@ -42,7 +45,7 @@ func parseFlags() {
 	name = flag.String("name", "", "heartbeat name")
 	apiUrl = flag.String("apiUrl", "https://api.opsgenie.com", "OpsGenie API url")
 	description = flag.String("description", "", "heartbeat description")
-	interval = flag.Int("timetoexpire", 10, "amount of time OpsGenie waits for a send request before creating alert")
+	flag.IntVar(&interval, "timetoexpire", 10, "amount of time OpsGenie waits for a send request before creating alert")
 	intervalUnit = flag.String("intervalUnit", "minutes", "minutes, hours or days")
 	delete = flag.Bool("delete", false, "delete the heartbeat on stop")
 	flag.Parse()
@@ -98,7 +101,7 @@ func addHeartbeat() {
 	if *description != "" {
 		contentParams["description"] = description
 	}
-	if *interval != 0 {
+	if interval != 0 {
 		contentParams["interval"] = interval
 	}
 	if *intervalUnit != "" {
@@ -120,7 +123,7 @@ func updateHeartbeatWithEnabledTrue(heartbeat Heartbeat) {
 	if *description != "" {
 		contentParams["description"] = description
 	}
-	if *interval != 0 {
+	if interval != 0 {
 		contentParams["interval"] = interval
 	}
 	if *intervalUnit != "" {
