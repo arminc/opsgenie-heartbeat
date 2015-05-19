@@ -37,7 +37,7 @@ func startHeartbeatLoop(args OpsArgs) {
 }
 
 func getHeartbeat(args OpsArgs) (*Heartbeat, error) {
-	code, body, err := doHttpRequest("GET", "/v1/json/heartbeat/", mandatoryRequestParams(args), nil)
+	code, body, err := doHTTPRequest("GET", "/v1/json/heartbeat/", mandatoryRequestParams(args), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -70,18 +70,18 @@ func createHeartbeat(body []byte, name string) (*Heartbeat, error) {
 }
 
 func addHeartbeat(args OpsArgs) {
-	doOpsGenieHttpRequestHandled("POST", "/v1/json/heartbeat/", nil, allContentParams(args), "Successfully added heartbeat ["+args.name+"]")
+	doOpsGenieHTTPRequestHandled("POST", "/v1/json/heartbeat/", nil, allContentParams(args), "Successfully added heartbeat ["+args.name+"]")
 }
 
 func updateHeartbeatWithEnabledTrue(args OpsArgs, heartbeat Heartbeat) {
 	var contentParams = allContentParams(args)
 	contentParams["id"] = heartbeat.ID
 	contentParams["enabled"] = true
-	doOpsGenieHttpRequestHandled("POST", "/v1/json/heartbeat", nil, contentParams, "Successfully enabled and updated heartbeat ["+args.name+"]")
+	doOpsGenieHTTPRequestHandled("POST", "/v1/json/heartbeat", nil, contentParams, "Successfully enabled and updated heartbeat ["+args.name+"]")
 }
 
 func sendHeartbeat(args OpsArgs) {
-	doOpsGenieHttpRequestHandled("POST", "/v1/json/heartbeat/send", nil, mandatoryContentParams(args), "Successfully sent heartbeat ["+args.name+"]")
+	doOpsGenieHTTPRequestHandled("POST", "/v1/json/heartbeat/send", nil, mandatoryContentParams(args), "Successfully sent heartbeat ["+args.name+"]")
 }
 
 func sendHeartbeatLoop(args OpsArgs) {
@@ -99,11 +99,11 @@ func stopHeartbeat(args OpsArgs) {
 }
 
 func deleteHeartbeat(args OpsArgs) {
-	doOpsGenieHttpRequestHandled("DELETE", "/v1/json/heartbeat", mandatoryRequestParams(args), nil, "Successfully deleted heartbeat ["+args.name+"]")
+	doOpsGenieHTTPRequestHandled("DELETE", "/v1/json/heartbeat", mandatoryRequestParams(args), nil, "Successfully deleted heartbeat ["+args.name+"]")
 }
 
 func disableHeartbeat(args OpsArgs) {
-	doOpsGenieHttpRequestHandled("POST", "/v1/json/heartbeat/disable", nil, mandatoryContentParams(args), "Successfully disabled heartbeat ["+args.name+"]")
+	doOpsGenieHTTPRequestHandled("POST", "/v1/json/heartbeat/disable", nil, mandatoryContentParams(args), "Successfully disabled heartbeat ["+args.name+"]")
 }
 
 func mandatoryContentParams(args OpsArgs) map[string]interface{} {
@@ -143,8 +143,8 @@ func createErrorResponse(responseBody []byte) (ErrorResponse, error) {
 	return *errResponse, nil
 }
 
-func doOpsGenieHttpRequestHandled(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}, msg string) {
-	_, err := doOpsGenieHttpRequest(method, urlSuffix, requestParameters, contentParameters)
+func doOpsGenieHTTPRequestHandled(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}, msg string) {
+	_, err := doOpsGenieHTTPRequest(method, urlSuffix, requestParameters, contentParameters)
 	if err != nil {
 		log.Error(err)
 	} else {
@@ -152,8 +152,8 @@ func doOpsGenieHttpRequestHandled(method string, urlSuffix string, requestParame
 	}
 }
 
-func doOpsGenieHttpRequest(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}) ([]byte, error) {
-	code, body, err := doHttpRequest(method, urlSuffix, requestParameters, contentParameters)
+func doOpsGenieHTTPRequest(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}) ([]byte, error) {
+	code, body, err := doHTTPRequest(method, urlSuffix, requestParameters, contentParameters)
 	if err != nil {
 		return nil, err
 	}
@@ -167,12 +167,12 @@ func doOpsGenieHttpRequest(method string, urlSuffix string, requestParameters ma
 	return body, nil
 }
 
-func doHttpRequest(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}) (int, []byte, error) {
+func doHTTPRequest(method string, urlSuffix string, requestParameters map[string]string, contentParameters map[string]interface{}) (int, []byte, error) {
 	request, err := createRequest(method, urlSuffix, requestParameters, contentParameters)
 	if err != nil {
 		return 0, nil, err
 	}
-	resp, err := getHttpClient().Do(request)
+	resp, err := getHTTPClient().Do(request)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -189,7 +189,7 @@ func createRequest(method string, urlSuffix string, requestParameters map[string
 	if err != nil {
 		return nil, err
 	}
-	url, err := createUrl(urlSuffix, requestParameters)
+	url, err := createURL(urlSuffix, requestParameters)
 	if err != nil {
 		return nil, err
 	}
@@ -200,9 +200,9 @@ func createRequest(method string, urlSuffix string, requestParameters map[string
 	return request, nil
 }
 
-func createUrl(urlSuffix string, requestParameters map[string]string) (string, error) {
-	var Url *url.URL
-	Url, err := url.Parse(apiUrl + urlSuffix)
+func createURL(urlSuffix string, requestParameters map[string]string) (string, error) {
+	var URL *url.URL
+	URL, err := url.Parse(apiURL + urlSuffix)
 	if err != nil {
 		return "", err
 	}
@@ -210,20 +210,20 @@ func createUrl(urlSuffix string, requestParameters map[string]string) (string, e
 	for k, v := range requestParameters {
 		parameters.Add(k, v)
 	}
-	Url.RawQuery = parameters.Encode()
-	return Url.String(), nil
+	URL.RawQuery = parameters.Encode()
+	return URL.String(), nil
 }
 
-func getHttpClient() *http.Client {
+func getHTTPClient() *http.Client {
 	client := &http.Client{
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			Dial: func(netw, addr string) (net.Conn, error) {
-				conn, err := net.DialTimeout(netw, addr, TIMEOUT)
+				conn, err := net.DialTimeout(netw, addr, timeout)
 				if err != nil {
 					return nil, err
 				}
-				conn.SetDeadline(time.Now().Add(TIMEOUT))
+				conn.SetDeadline(time.Now().Add(timeout))
 				return conn, nil
 			},
 		},
@@ -231,10 +231,12 @@ func getHttpClient() *http.Client {
 	return client
 }
 
+//Heartbeat represents the OpsGenie heartbeat data structure
 type Heartbeat struct {
 	ID string `json:"id"`
 }
 
+//ErrorResponse represents the OpsGenie error response data structure
 type ErrorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"error"`

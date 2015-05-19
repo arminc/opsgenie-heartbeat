@@ -9,7 +9,7 @@ import (
 const mandatoryFlags = "[apiKey] and [name] are mandatory"
 const intervalWrong = "[intervalUnit] can only be one of the following: mintes, hours or days"
 
-var SharedFlags = []cli.Flag{
+var sharedFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:  "apiKey, k",
 		Value: "",
@@ -22,7 +22,7 @@ var SharedFlags = []cli.Flag{
 	},
 }
 
-var LoopFlags = []cli.Flag{
+var loopFlags = []cli.Flag{
 	cli.DurationFlag{
 		Name:  "loopInterval, l",
 		Value: time.Duration(60 * time.Second),
@@ -30,7 +30,7 @@ var LoopFlags = []cli.Flag{
 	},
 }
 
-var StartFlags = []cli.Flag{
+var startFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:  "description, d",
 		Value: "",
@@ -48,12 +48,12 @@ var StartFlags = []cli.Flag{
 	},
 }
 
-var Commands = []cli.Command{
+var commands = []cli.Command{
 	{
 		Name:        "start",
 		Usage:       "Adds a new heartbeat and then sends a hartbeat",
 		Description: "Adds a new heartbeat to OpsGenie with the configuration from the given flags. If the heartbeat with the name specified in -name exists, updates the heartbeat accordingly and enables it. It also sends a heartbeat message to activate the heartbeat.",
-		Flags:       StartFlags,
+		Flags:       startFlags,
 		Action: func(c *cli.Context) {
 			startHeartbeatAndSend(extractArgs(c))
 		},
@@ -62,7 +62,7 @@ var Commands = []cli.Command{
 		Name:        "startLoop",
 		Usage:       "Same as start and sendLoop",
 		Description: "Combines start and sendLoop",
-		Flags:       append(StartFlags, LoopFlags...),
+		Flags:       append(startFlags, loopFlags...),
 		Action: func(c *cli.Context) {
 			startHeartbeatLoop(extractArgs(c))
 		},
@@ -93,13 +93,14 @@ var Commands = []cli.Command{
 		Name:        "sendLoop",
 		Usage:       "Keep sending",
 		Description: "Sends a continouse heartbeat message to reactivate the heartbeat specified with -name.",
-		Flags:       LoopFlags,
+		Flags:       loopFlags,
 		Action: func(c *cli.Context) {
 			sendHeartbeatLoop(extractArgs(c))
 		},
 	},
 }
 
+//OpsArgs contain the application arguments
 type OpsArgs struct {
 	apiKey       string
 	name         string

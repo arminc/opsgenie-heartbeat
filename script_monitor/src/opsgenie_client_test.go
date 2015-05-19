@@ -10,7 +10,7 @@ var testArgs = OpsArgs{"testKey", "testName", "testDescription", 99, "month", ti
 func TestCreateUrl(t *testing.T) {
 	var requestParams = make(map[string]string)
 	requestParams["apiKey"] = "test"
-	url, err := createUrl("/v1/test", requestParams)
+	url, err := createURL("/v1/test", requestParams)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
