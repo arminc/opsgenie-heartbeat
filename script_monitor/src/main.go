@@ -9,8 +9,8 @@ import (
 	"github.com/codegangsta/cli"
 )
 
-var TIMEOUT = time.Second * 30
-var apiUrl = "https://api.opsgenie.com"
+var timeout = time.Second * 30
+var apiURL = "https://api.opsgenie.com"
 
 func main() {
 	app := cli.NewApp()
@@ -18,8 +18,8 @@ func main() {
 	app.Version = "1.0"
 	app.Usage = "Send hartbeats to OpsGenie"
 	app.Author = "OpsGenie"
-	app.Flags = SharedFlags
-	app.Commands = Commands
+	app.Flags = sharedFlags
+	app.Commands = commands
 	app.Run(os.Args)
 }
 

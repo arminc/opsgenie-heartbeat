@@ -10,10 +10,13 @@ var testArgs = OpsArgs{"testKey", "testName", "testDescription", 99, "month", ti
 func TestCreateUrl(t *testing.T) {
 	var requestParams = make(map[string]string)
 	requestParams["apiKey"] = "test"
-	var url = createUrl("/v1/test", requestParams)
-	var testUrl = "https://api.opsgenie.com/v1/test?apiKey=test"
-	if url != testUrl {
-		t.Errorf("Url not correct is [%s] but should be [%s]", url, testUrl)
+	url, err := createURL("/v1/test", requestParams)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	testURL := "https://api.opsgenie.com/v1/test?apiKey=test"
+	if url != testURL {
+		t.Errorf("Url not correct is [%s] but should be [%s]", url, testURL)
 	}
 }
 
@@ -33,8 +36,11 @@ func TestMandatoryRequestParams(t *testing.T) {
 
 func TestCreateErrorResponse(t *testing.T) {
 	json := `{"code":10, "error": "test error"}`
-	error := createErrorResponse([]byte(json))
-	if error.Code != 10 || error.Message != "test error" {
-		t.Errorf("Error [%+v] does not correspond to json [%s]", error, json)
+	errorResp, err := createErrorResponse([]byte(json))
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	if errorResp.Code != 10 || errorResp.Message != "test error" {
+		t.Errorf("Error [%+v] does not correspond to json [%s]", errorResp, json)
 	}
 }
