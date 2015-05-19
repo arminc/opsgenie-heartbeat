@@ -13,6 +13,7 @@ var timeout = time.Second * 30
 var apiURL = "https://api.opsgenie.com"
 
 func main() {
+	log.SetLevel(log.WarnLevel)
 	app := cli.NewApp()
 	app.Name = path.Base(os.Args[0])
 	app.Version = "1.0"
