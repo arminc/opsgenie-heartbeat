@@ -25,7 +25,7 @@ func TestFlagWrongValue(t *testing.T) {
 
 func TestAllKeysProvided(t *testing.T) {
 	ops := extractArgs(createCliAll("apiKey", "name", "intervalUnit", "description", 11, true))
-	if ops.apiKey != "apiKey" && ops.name != "name" && ops.description != "description" && ops.interval != 11 && ops.intervalUnit != "intervalUnit" && ops.delete != true {
+	if ops.ApiKey != "apiKey" && ops.Name != "name" && ops.Description != "description" && ops.Interval != 11 && ops.IntervalUnit != "intervalUnit" && ops.Delete != true {
 		t.Errorf("OpsArgs struct not correct [%+v]", ops)
 	}
 }

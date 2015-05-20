@@ -105,13 +105,13 @@ var Commands = []cli.Command{
 
 //OpsArgs contain the application arguments
 type OpsArgs struct {
-	apiKey       string
-	name         string
-	description  string
-	interval     int
-	intervalUnit string
-	loopInterval time.Duration
-	delete       bool
+	ApiKey       string
+	Name         string
+	Description  string
+	Interval     int
+	IntervalUnit string
+	LoopInterval time.Duration
+	Delete       bool
 }
 
 func extractArgs(c *cli.Context) OpsArgs {

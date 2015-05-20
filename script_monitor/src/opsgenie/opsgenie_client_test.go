@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-var testArgs = OpsArgs{"testKey", "testName", "testDescription", 99, "month", time.Second * 10, true}
+var testargs = OpsArgs{"testKey", "testName", "testDescription", 99, "month", time.Second * 10, true}
 
 func TestCreateUrl(t *testing.T) {
 	var requestParams = make(map[string]string)
@@ -21,16 +21,16 @@ func TestCreateUrl(t *testing.T) {
 }
 
 func TestAllContentParams(t *testing.T) {
-	var all = allContentParams(testArgs)
-	if all["apiKey"] != testArgs.apiKey || all["name"] != testArgs.name || all["description"] != testArgs.description || all["interval"] != testArgs.interval || all["intervalUnit"] != testArgs.intervalUnit {
-		t.Errorf("OpsArgs [%+v] are not the same as all content params [%s]", testArgs, all)
+	var all = allContentParams(testargs)
+	if all["apiKey"] != testargs.ApiKey || all["name"] != testargs.Name || all["description"] != testargs.Description || all["interval"] != testargs.Interval || all["intervalUnit"] != testargs.IntervalUnit {
+		t.Errorf("OpsArgs [%+v] are not the same as all content params [%s]", testargs, all)
 	}
 }
 
 func TestMandatoryRequestParams(t *testing.T) {
-	var params = mandatoryRequestParams(testArgs)
-	if params["apiKey"] != testArgs.apiKey || params["name"] != testArgs.name {
-		t.Errorf("Requested params [%s] are not the same as from OpsArgs [%+v]", params, testArgs)
+	var params = mandatoryRequestParams(testargs)
+	if params["apiKey"] != testargs.ApiKey || params["name"] != testargs.Name {
+		t.Errorf("Requested params [%s] are not the same as from OpsArgs [%+v]", params, testargs)
 	}
 }
 
