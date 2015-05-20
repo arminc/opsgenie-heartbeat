@@ -1,4 +1,4 @@
-package main
+package opsgenie
 
 import (
 	"bytes"
@@ -13,6 +13,9 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 )
+
+var timeout = time.Second * 30
+var apiURL = "https://api.opsgenie.com"
 
 func startHeartbeatAndSend(args OpsArgs) {
 	startHeartbeat(args)
@@ -32,6 +35,7 @@ func startHeartbeat(args OpsArgs) {
 	}
 }
 
+//StartHeartbeatLoop can be used from other codes as a library call
 func StartHeartbeatLoop(args OpsArgs) {
 	startHeartbeat(args)
 	sendHeartbeatLoop(args)

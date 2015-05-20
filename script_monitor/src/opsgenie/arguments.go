@@ -1,6 +1,7 @@
-package main
+package opsgenie
 
 import (
+	"log"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -9,7 +10,8 @@ import (
 const mandatoryFlags = "[apiKey] and [name] are mandatory"
 const intervalWrong = "[intervalUnit] can only be one of the following: mintes, hours or days"
 
-var sharedFlags = []cli.Flag{
+//SharedFlags are used to show the main flags for the application
+var SharedFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:  "apiKey, k",
 		Value: "",
@@ -48,7 +50,8 @@ var startFlags = []cli.Flag{
 	},
 }
 
-var commands = []cli.Command{
+//Commands are used to show the commands for the application
+var Commands = []cli.Command{
 	{
 		Name:        "start",
 		Usage:       "Adds a new heartbeat and then sends a hartbeat",
@@ -119,4 +122,8 @@ func extractArgs(c *cli.Context) OpsArgs {
 		logAndExit(intervalWrong)
 	}
 	return OpsArgs{c.GlobalString("apiKey"), c.GlobalString("name"), c.String("description"), c.Int("interval"), c.String("intervalUnit"), c.Duration("loopInterval"), c.Bool("delete")}
+}
+
+var logAndExit = func(msg string) {
+	log.Fatal(msg)
 }
