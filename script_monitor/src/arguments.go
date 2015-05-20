@@ -64,7 +64,7 @@ var commands = []cli.Command{
 		Description: "Combines start and sendLoop",
 		Flags:       append(startFlags, loopFlags...),
 		Action: func(c *cli.Context) {
-			startHeartbeatLoop(extractArgs(c))
+			StartHeartbeatLoop(extractArgs(c))
 		},
 	},
 	{

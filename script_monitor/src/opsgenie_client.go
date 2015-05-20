@@ -32,7 +32,7 @@ func startHeartbeat(args OpsArgs) {
 	}
 }
 
-func startHeartbeatLoop(args OpsArgs) {
+func StartHeartbeatLoop(args OpsArgs) {
 	startHeartbeat(args)
 	sendHeartbeatLoop(args)
 }
