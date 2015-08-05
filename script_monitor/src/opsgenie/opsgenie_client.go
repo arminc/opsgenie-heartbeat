@@ -81,6 +81,7 @@ func addHeartbeat(args OpsArgs) {
 func updateHeartbeatWithEnabledTrue(args OpsArgs, heartbeat Heartbeat) {
 	var contentParams = allContentParams(args)
 	contentParams["id"] = heartbeat.ID
+	contentParams["name"] = args.Name
 	contentParams["enabled"] = true
 	doOpsGenieHTTPRequestHandled("POST", "/v1/json/heartbeat", nil, contentParams, "Successfully enabled and updated heartbeat ["+args.Name+"]")
 }
